@@ -1,0 +1,57 @@
+{% extends "base.html" %}
+
+{% block main %}
+<h1 class="page-header">Ingredients and Recipe</h1>
+<p>Add Ingredients and Recipe Here.</p>
+<form action="{{ url_for('recipe') }}" method="post">
+
+    {{ form.csrf_token }}
+
+    <div class="form-group">
+        {{ form.ingredient_name.label(class="title") }} (Required) <p>Please enter the Ingredient Name.</p>
+        {{ form.ingredient_name(class="ingredient_name") }}
+     </div>
+ 
+     <div class="form-group">
+         {{ form.measurements.label(class="title")}} (Required) <p>Please enter Measurements.</p>
+         {{ form.measurements(class="measurements") }}
+     </div>
+ 
+     <div class="form-group">
+         {{ form.calories.label(class="title") }} (Required) <p>Please enter the calorie amount.</p>
+         {{ form.calories(class="calories") }}
+     </div>
+
+    <hr>
+
+    <div class="form-group">
+        {{ form.recipe_name.label(class="title") }} (Required) <p>Please enter the Recipe Name.</p>
+        {{ form.recipe_name(class="recipe_name") }}
+     </div>
+ 
+     <div class="form-group">
+         {{ form.procedure.label(class="title")}} (Required) <p>Please enter the Recipe Procedure.</p>
+         {{ form.procedure(class="recipe_procedure") }}
+     </div>
+ 
+     <div class="form-group">
+         {{ form.prep_time.label(class="title") }} (Required) <p>Please enter the Preparation Time.</p>
+         {{ form.prep_time(class="prep_time") }}
+     </div>
+
+     <div class="form-group">
+        {{ form.mealtype.label(class="title") }} (Required) <p>Please select a Meal Type.</p>
+        {{ form.mealtype(class="mealtype") }}
+    </div>
+
+     <div class="form-group">
+        {{ form.tot_cal.label(class="title") }} (Required) <p>.......total calories??.</p>
+        {{ form.tot_cal(class="tot_cal") }}
+    </div>
+
+     <br>
+
+     <button type="send" class="btn">Save Ingredients and Recipe</button>
+
+ </form>
+{% endblock %}

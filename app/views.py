@@ -8,7 +8,7 @@ import os
 from app import app
 from flask import render_template, request, redirect, url_for, flash, session, abort,send_from_directory
 from werkzeug.utils import secure_filename
-from .forms import UploadForm
+from .forms import MealForm, SignUpForm
 
 
 
@@ -29,8 +29,37 @@ def about():
     """Render the website's about page."""
     return render_template('about.html', name="Mary Jane")
 
+@app.route('/recipe', methods=['POST', 'GET'])
+def recipe():
+    recipeform=MealForm()
+
+    if request.method == 'POST' and recipeform.validate_on_submit():
+        recipe_name=recipeform.recipe_name.data
+        prep_time=recipeform.prep_time.data
+        procedure=recipeform.procedure.data
+        mealtype=recipeform.mealtype.data
+        tot_cal=recipeform.tot_cal.data
 
 
+        
+
+        flash('YOu have sucessfully added a recipe', 'success')
+        return render_template()
+    
+    flash_errors(recipeform)
+    return render_template('recipe.html', form=recipeform)
+
+@app.route('/Sign-Up', methods=['POST', 'GET'])
+def signup():
+    form = SignUpForm()
+    if request.method == 'POST' and form.validate_on_submit():
+        name = request.form['name'],
+        username = request.form['username'],
+        password = request.form['password'],
+
+
+
+    return render_template('signup.html')
 ###
 # The functions below should be applicable to all Flask apps.
 ###
