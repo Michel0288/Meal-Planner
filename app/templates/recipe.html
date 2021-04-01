@@ -1,57 +1,87 @@
 {% extends "base.html" %}
 
 {% block main %}
-<h1 class="page-header">Ingredients and Recipe</h1>
-<p>Add Ingredients and Recipe Here.</p>
+<div class="card">
+    <h1 class="page-header">ADD RECIPES AND INGREDIENTS</h1>
+<h3>RECIPE</h3>
 <form action="{{ url_for('recipe') }}" method="post">
 
     {{ form.csrf_token }}
 
     <div class="form-group">
-        {{ form.ingredient_name.label(class="title") }} (Required) <p>Please enter the Ingredient Name.</p>
-        {{ form.ingredient_name(class="ingredient_name") }}
+        {{ form.recipe_name.label(class="title") }} <span>(Required)</span> <br>
+        {{form.recipe_name.description}}
+        {{ form.recipe_name(class='form-control') }}
      </div>
  
      <div class="form-group">
-         {{ form.measurements.label(class="title")}} (Required) <p>Please enter Measurements.</p>
-         {{ form.measurements(class="measurements") }}
+         {{ form.procedure.label(class="title")}} <span>(Required)</span> <br>
+         {{form.procedure.description}}
+         {{ form.procedure(class='form-control') }}
      </div>
  
-     <div class="form-group">
-         {{ form.calories.label(class="title") }} (Required) <p>Please enter the calorie amount.</p>
-         {{ form.calories(class="calories") }}
+     <div class="row">
+        <div class="col">
+            {{ form.prep_time.label(class="title") }} <span>(Required)</span> <br>
+            {{form.prep_time.description}}
+            {{ form.prep_time(class='form-control') }}
+        </div>
+   
+        <div class="col">
+           {{ form.cook_time.label(class="title") }} <span>(Required)</span> <br>
+           {{form.cook_time.description}}
+           {{ form.cook_time(class='form-control') }}
+       </div>
+     </div>
+
+     <div class="row">
+        <div class="col">
+            {{ form.mealtype.label(class="title") }} <span>(Required)</span> <br>
+            {{form.mealtype.description}}
+            {{ form.mealtype(class='form-control') }}
+        </div>
+    
+        <div class="col">
+            {{ form.servings.label(class="title") }} <span>(Required)</span> <br>
+            {{form.servings.description}}
+            {{ form.servings(class='form-control') }}
+        </div>
      </div>
 
     <hr>
 
-    <div class="form-group">
-        {{ form.recipe_name.label(class="title") }} (Required) <p>Please enter the Recipe Name.</p>
-        {{ form.recipe_name(class="recipe_name") }}
-     </div>
+    <h3>INGREDIENTS</h3>
+
+    <div class="row">
+        <div class="col">
+            {{ form.ingredient_name.label(class="title") }} <span>(Required)</span> <br>
+            {{form.ingredient_name.description}}
+            {{ form.ingredient_name(class='form-control') }}
+        </div>
+    
+        <div class="col">
+            {{ form.calories.label(class="title") }} <span>(Required)</span> <br>
+            {{form.calories.description}}
+            {{ form.calories(class='form-control') }}
+        </div>
+
+        <div class="col">
+            <button type="send" class="btn btn-primary" id="IngredientsButton">More Ingredients</button> 
+        </div>
+    </div>
  
      <div class="form-group">
-         {{ form.procedure.label(class="title")}} (Required) <p>Please enter the Recipe Procedure.</p>
-         {{ form.procedure(class="recipe_procedure") }}
+         {{ form.measurements.label(class="title")}} <span>(Required)</span> <br>
+         {{form.measurements.description}}
+         {{ form.measurements(class='form-control') }}
      </div>
- 
-     <div class="form-group">
-         {{ form.prep_time.label(class="title") }} (Required) <p>Please enter the Preparation Time.</p>
-         {{ form.prep_time(class="prep_time") }}
-     </div>
-
-     <div class="form-group">
-        {{ form.mealtype.label(class="title") }} (Required) <p>Please select a Meal Type.</p>
-        {{ form.mealtype(class="mealtype") }}
-    </div>
-
-     <div class="form-group">
-        {{ form.tot_cal.label(class="title") }} (Required) <p>.......total calories??.</p>
-        {{ form.tot_cal(class="tot_cal") }}
-    </div>
 
      <br>
 
-     <button type="send" class="btn">Save Ingredients and Recipe</button>
+     <button type="send" class="btn btn-primary">Add Recipe</button> 
 
  </form>
+
+</div>
+
 {% endblock %}
