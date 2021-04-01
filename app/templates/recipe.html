@@ -10,43 +10,50 @@
 
     <div class="form-group">
         {{ form.recipe_name.label(class="title") }} <span>(Required)</span> <br>
-        {{form.recipe_name.description}}
+        {{ form.recipe_name.description }}
         {{ form.recipe_name(class='form-control') }}
-     </div>
+    </div>
  
-     <div class="form-group">
+    <div class="form-group">
          {{ form.procedure.label(class="title")}} <span>(Required)</span> <br>
-         {{form.procedure.description}}
+         {{ form.procedure.description }}
          {{ form.procedure(class='form-control') }}
-     </div>
+    </div>
  
-     <div class="row">
+    <div class="row">
         <div class="col">
             {{ form.prep_time.label(class="title") }} <span>(Required)</span> <br>
-            {{form.prep_time.description}}
+            {{ form.prep_time.description }}
             {{ form.prep_time(class='form-control') }}
         </div>
    
         <div class="col">
            {{ form.cook_time.label(class="title") }} <span>(Required)</span> <br>
-           {{form.cook_time.description}}
+           {{ form.cook_time.description }}
            {{ form.cook_time(class='form-control') }}
        </div>
-     </div>
+    </div>
 
-     <div class="row">
+    <div class="row">
         <div class="col">
             {{ form.mealtype.label(class="title") }} <span>(Required)</span> <br>
-            {{form.mealtype.description}}
+            {{ form.mealtype.description }}
             {{ form.mealtype(class='form-control') }}
         </div>
     
         <div class="col">
             {{ form.servings.label(class="title") }} <span>(Required)</span> <br>
-            {{form.servings.description}}
+            {{ form.servings.description }}
             {{ form.servings(class='form-control') }}
         </div>
-     </div>
+    </div>
+
+    <div class="form-group">
+        {{ form.photo.label(class="title") }} <span>(Required)</span> <br>
+        {{ form.photo.description }}
+        {{ form.photo(class='form-control', style='border:none;') }}
+    </div>
+
 
     <hr>
 
@@ -55,13 +62,13 @@
     <div class="row">
         <div class="col">
             {{ form.ingredient_name.label(class="title") }} <span>(Required)</span> <br>
-            {{form.ingredient_name.description}}
+            {{ form.ingredient_name.description }}
             {{ form.ingredient_name(class='form-control') }}
         </div>
     
         <div class="col">
             {{ form.calories.label(class="title") }} <span>(Required)</span> <br>
-            {{form.calories.description}}
+            {{ form.calories.description }}
             {{ form.calories(class='form-control') }}
         </div>
 
@@ -71,8 +78,8 @@
     </div>
  
      <div class="form-group">
-         {{ form.measurements.label(class="title")}} <span>(Required)</span> <br>
-         {{form.measurements.description}}
+         {{ form.measurements.label(class="title") }} <span>(Required)</span> <br>
+         {{ form.measurements.description }}
          {{ form.measurements(class='form-control') }}
      </div>
 

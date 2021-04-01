@@ -74,15 +74,27 @@ def recipe():
         mealtype = recipeform.mealtype.data
         servings = recipeform.servings.data
 
-
-
-        
-
         flash('YOu have sucessfully added a recipe', 'success')
         return render_template()
     
     flash_errors(recipeform)
     return render_template('recipe.html', form=recipeform)
+
+def get_uploaded_images():
+    rootdir = os.getcwd()
+    photolist = []
+
+    for subdir, dirs, files in os.walk(rootdir + '/uploads'):
+        for file in files:
+            photolist += [file]
+    photolist.pop(0)
+    return photolist
+
+@app.route('/uploads/<filename>')
+def get_image(filename):
+    rootdir2 = os.getcwd()
+
+    return send_from_directory(os.path.join(rootdir2, app.config['UPLOAD_FOLDER']), filename)
 
 @app.route('/SignUp', methods=['POST', 'GET'])
 def signup():

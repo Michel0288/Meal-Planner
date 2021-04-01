@@ -3,6 +3,7 @@ from flask_wtf import FlaskForm
 from wtforms import StringField, IntegerField, SelectField, PasswordField
 from wtforms.validators import DataRequired, Optional, InputRequired
 from wtforms.widgets import TextArea
+from flask_wtf.file import FileField, FileRequired, FileAllowed
 
 
 class LoginForm(FlaskForm):
@@ -35,3 +36,4 @@ class RecipeForm(FlaskForm):
     procedure = StringField('Procedure', widget=TextArea(), validators=[DataRequired()], description="Please enter recipe procedure.")
     mealtype = SelectField('Meal Type', choices= [('Breakfast'), ('Lunch'), ('Dinner')], validators=[Optional()], description="Please select type of meal.")  
     servings = IntegerField('Servings',validators=[DataRequired()], description="Please enter amount of servings.")
+    photo = FileField('Photo', validators=[FileRequired(), FileAllowed(['jpg', 'png', 'Photos only!'])], description="Add a Photo of the meal.")
