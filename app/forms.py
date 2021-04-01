@@ -1,7 +1,7 @@
 
 from flask_wtf import FlaskForm
 from wtforms import StringField, IntegerField, SelectField, PasswordField
-from wtforms.validators import DataRequired, Optional, InputRequired, InputField
+from wtforms.validators import DataRequired, Optional, InputRequired
 from wtforms.widgets import TextArea
 
 class RecipeForm(FlaskForm):
@@ -17,12 +17,16 @@ class RecipeForm(FlaskForm):
     tot_cal=IntegerField('Calorie Count',validators=[DataRequired()])
 
 class SignUpForm(FlaskForm):
-    name = StringField('First Name', validators=[DataRequired()])
+    name = StringField('Name', validators=[DataRequired()])
     username = StringField('Username', validators=[InputRequired()])
     password = PasswordField('Password', validators=[DataRequired()])
-    age = InputField('Age', validators=[InputRequired()])
+    age = StringField('Age', validators=[InputRequired()])
     gender = SelectField('Gender', choices=[('Male', 'Male'), ('Female', 'Female')])
-    height = InputField('Height', validators=[InputRequired()])
-    weigth = InputField('Weight', validators=[InputRequired()])
+    height = StringField('Height', validators=[InputRequired()])
+    weight = StringField('Weight', validators=[InputRequired()])
     goals = SelectField('Goals', choices=[('Gain', 'Gain'), ('Lose', 'Lose'), ('Maintain', 'Maintain')])
-    calories = InputField('Calories', validators=[InputRequired()])
+    calories = StringField('Calories', validators=[InputRequired()])
+
+class LoginForm(FlaskForm):
+    username = StringField('Username', validators=[InputRequired()])
+    password = PasswordField('Password', validators=[InputRequired()])

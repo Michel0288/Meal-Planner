@@ -8,7 +8,7 @@ import os
 from app import app
 from flask import render_template, request, redirect, url_for, flash, session, abort,send_from_directory
 from werkzeug.utils import secure_filename
-from .forms import MealForm, SignUpForm
+from .forms import RecipeForm, SignUpForm, LoginForm
 
 
 
@@ -29,11 +29,31 @@ def about():
     """Render the website's about page."""
     return render_template('about.html', name="Mary Jane")
 
+@app.route('/login/', methods=['POST', 'GET'])
+def login():
+    form = LoginForm()
+    
+    if request.method == "POST" and form.validate_on_submit():
+        username = form.username.data
+        password = form.password.data
+        flash('Login successful!', 'success')
+        return redirect(url_for("home"))
+    return render_template('login.html', form=form)
+
+@app.route('/logout/')
+def logout():
+    """Render the website's login page."""
+    return render_template('logout.html')
+
+
 @app.route('/recipe', methods=['POST', 'GET'])
 def recipe():
-    recipeform=MealForm()
+    recipeform=RecipeForm()
 
     if request.method == 'POST' and recipeform.validate_on_submit():
+        ingredient_name=recipeform.ingredient_name.data
+        measurements=recipeform.measurements.data
+        calories=recipeform.calories.data
         recipe_name=recipeform.recipe_name.data
         prep_time=recipeform.prep_time.data
         procedure=recipeform.procedure.data
@@ -43,7 +63,7 @@ def recipe():
 
         
 
-        flash('YOu have sucessfully added a recipe', 'success')
+        flash('You have sucessfully added a recipe', 'success')
         return render_template()
     
     flash_errors(recipeform)
@@ -53,13 +73,20 @@ def recipe():
 def signup():
     form = SignUpForm()
     if request.method == 'POST' and form.validate_on_submit():
-        name = request.form['name'],
-        username = request.form['username'],
-        password = request.form['password'],
+        name = request.form['name']
+        username = request.form['username']
+        password = request.form['password']
+        age = request.form['age']
+        height = request.form['height']
+        weight = request.form['weight']
+        goals = request.form['goals']
+        calories = request.form['calories']
 
 
+        flash("Signup Successful!", 'success')
+        return redirect(url_for('login'))
 
-    return render_template('signup.html')
+    return render_template('signup.html', form=form)
 ###
 # The functions below should be applicable to all Flask apps.
 ###
