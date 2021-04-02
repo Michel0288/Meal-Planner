@@ -9,8 +9,8 @@ from app import app
 from flask import render_template, request, redirect, url_for, flash, session, abort,send_from_directory
 from werkzeug.utils import secure_filename
 from .forms import RecipeForm, SignUpForm, LoginForm
-
-
+from flask_login import login_user, logout_user, current_user, login_required
+from werkzeug.security import check_password_hash
 
 
 
@@ -29,64 +29,105 @@ def about():
     """Render the website's about page."""
     return render_template('about.html', name="Mary Jane")
 
-@app.route('/login/', methods=['POST', 'GET'])
+@app.route("/login", methods=["GET", "POST"])
 def login():
     form = LoginForm()
-    
+    # if current_user.is_authenticated:
+    #     return redirect(url_for('secure_page'))
     if request.method == "POST" and form.validate_on_submit():
         username = form.username.data
         password = form.password.data
-        flash('Login successful!', 'success')
-        return redirect(url_for("home"))
-    return render_template('login.html', form=form)
 
-@app.route('/logout/')
+        # user = UserProfile.query.filter_by(username=username).first()
+        # if user is not None and check_password_hash(user.password,password):
+        #     remember_me = False
+        #     if 'remember_me' in request.form:
+        #         remember_me = True
+        #     login_user(user, remember=remember_me)
+        #     flash('Login successful!', 'success')
+        #     return redirect(url_for("secure_page"))
+        # else:
+        #     flash('Username or password is incorrect.', 'danger')   
+    flash_errors(form)
+    return render_template("login.html", form=form)
+
+@app.route("/logout")
+@login_required
 def logout():
-    """Render the website's login page."""
-    return render_template('logout.html')
+    logout_user()
+    flash('You have been logged out.', 'danger')
+    return redirect(url_for('home'))
 
+@app.route("/profile")
+# @login_required
+def profile():
+
+    return render_template("profile.html")
 
 @app.route('/recipe', methods=['POST', 'GET'])
 def recipe():
     recipeform=RecipeForm()
 
     if request.method == 'POST' and recipeform.validate_on_submit():
-        ingredient_name=recipeform.ingredient_name.data
-        measurements=recipeform.measurements.data
-        calories=recipeform.calories.data
-        recipe_name=recipeform.recipe_name.data
-        prep_time=recipeform.prep_time.data
-        procedure=recipeform.procedure.data
-        mealtype=recipeform.mealtype.data
-        tot_cal=recipeform.tot_cal.data
+        ingredient_name = recipeform.ingredient_name.data
+        measurements = recipeform.measurements.data
+        calories = recipeform.calories.data
+        recipe_name = recipeform.recipe_name.data
+        prep_time = recipeform.prep_time.data
+        cook_time = recipeform.cook_time.data
+        procedure = recipeform.procedure.data
+        mealtype = recipeform.mealtype.data
+        servings = recipeform.servings.data
+        photo = form.photo.data
+        filename = secure_filename(photo.filename)
+        photo.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
 
-
-        
-
-        flash('You have sucessfully added a recipe', 'success')
+        flash('YOu have sucessfully added a recipe', 'success')
         return render_template()
     
     flash_errors(recipeform)
     return render_template('recipe.html', form=recipeform)
 
-@app.route('/Sign-Up', methods=['POST', 'GET'])
+def get_uploaded_images():
+    rootdir = os.getcwd()
+    photolist = []
+
+    for subdir, dirs, files in os.walk(rootdir + '/uploads'):
+        for file in files:
+            photolist += [file]
+    photolist.pop(0)
+    return photolist
+
+@app.route('/uploads/<filename>')
+def get_image(filename):
+    rootdir2 = os.getcwd()
+
+    return send_from_directory(os.path.join(rootdir2, app.config['UPLOAD_FOLDER']), filename)
+
+@app.route('/SignUp', methods=['POST', 'GET'])
 def signup():
     form = SignUpForm()
     if request.method == 'POST' and form.validate_on_submit():
-        name = request.form['name']
-        username = request.form['username']
-        password = request.form['password']
-        age = request.form['age']
-        height = request.form['height']
-        weight = request.form['weight']
-        goals = request.form['goals']
-        calories = request.form['calories']
-
+        firstname = form.firstname.data
+        lastname = form.last.data
+        username = form.username.data
+        password = form.password.data
+        age = form.age.data
+        gender = form.gender.data
+        height = form.height.data
+        weight = form.weight.data
+        allergies = form.allergies.data
+        dietarylifestyle = form.dietarylifestyle.data
+        dietaryrestrictions = form.dietaryrestrictions.data 
+        goal = form.goals.data
+        dailycalories = form.dailycalories.data
+        photo = form.photo.data
+        filename = secure_filename(photo.filename)
+        photo.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
 
         flash("Signup Successful!", 'success')
-        return redirect(url_for('login'))
-
-    return render_template('signup.html', form=form)
+        return redirect(url_for('home'))
+    return render_template('signup.html',form=form)
 ###
 # The functions below should be applicable to all Flask apps.
 ###

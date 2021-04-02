@@ -37,7 +37,7 @@ deactivate () {
 # unset irrelevant variables
 deactivate nondestructive
 
-VIRTUAL_ENV="/home/kadii/Meal-Planner/venv"
+VIRTUAL_ENV="/home/patrece/Documents/COMP3161/Meal-Planner/venv"
 export VIRTUAL_ENV
 
 _OLD_VIRTUAL_PATH="$PATH"

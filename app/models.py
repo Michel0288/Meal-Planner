@@ -36,6 +36,6 @@ class IngredientProperty(db.Model):
 
 
     def __init__(self,ingredient_name,measurements,calories):
-        self.ingredient_name=ingredient_name
+        self.ingredient_name=ingredient_ename
         self.measurements=measurements
         self.calories=calories

@@ -29,7 +29,7 @@ end
 # unset irrelevant variables
 deactivate nondestructive
 
-set -gx VIRTUAL_ENV "/home/kadii/Meal-Planner/venv"
+set -gx VIRTUAL_ENV "/home/patrece/Documents/COMP3161/Meal-Planner/venv"
 
 set -gx _OLD_VIRTUAL_PATH $PATH
 set -gx PATH "$VIRTUAL_ENV/bin" $PATH
