@@ -25,11 +25,12 @@ class SignUpForm(FlaskForm):
     dietaryrestrictions = SelectField('Dietary Restrictions', validators=[DataRequired()], choices=[('None'), ('Lactose Intolerance'), ('Diabetic'), ('High Blood Pressure')], description="Please select a dietary restriction.")
     goal = SelectField('Goals', validators=[DataRequired()], choices=[('None'), ('Gain Weight'), ('Lose Weight'), ('Maintain Weight')], description="Please select your weight goal.")
     dailycalories = StringField('Daily Calories Intake', validators=[DataRequired()], description="Please select your expected daily calorie intake.")
+    photo = FileField('Photo', validators=[FileRequired(), FileAllowed(['jpg', 'png', 'Photos only!'])], description="Add a Profile Photo.")
 
 class RecipeForm(FlaskForm):
     ingredient_name = StringField('Ingredient Name',validators=[DataRequired()], description="Please enter ingredient name.")
-    measurements = StringField('Measurement', widget=TextArea(), validators=[DataRequired()], description="Please enter recipe procedure.")
-    calories = IntegerField('Calorie Count',validators=[DataRequired()], description="Please enter amount of calories for ingredient.")
+    measurements = StringField('Measurement', widget=TextArea(), validators=[DataRequired()], description="Please enter recipe measurements.")
+    calories = IntegerField('Calorie Count',validators=[DataRequired()], description="Please enter ingredient calories.")
     recipe_name = StringField('Recipe Name',validators=[DataRequired()], description="Please enter name of recipe.")
     prep_time = StringField('Preparation Time', validators=[DataRequired()], description="Please enter amount of time for prepare recipe.")
     cook_time = StringField('Cooking Time', validators=[DataRequired()], description="Please enter amount of time to cook recipe." )

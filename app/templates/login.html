@@ -1,25 +1,26 @@
 {% extends "base.html" %}
 {% block main %}
-<h1 style="text-align: center; padding-bottom: 10px; color:  #033d5f;">WELCOME TO HEALTHY WAY MEAL PLANNING APP!</h1>
-<div class="p-5 h-100 w-100" style="border-radius:10px; background-color:white;box-shadow:  0px 0px 30px rgb(9, 73, 110);">
-  <div class='d-flex justify-content-center' >
-        <div class="login-form pb-5 center-block">
-            {{ form.csrf_token }}
-            <div class="form-group">
-              {% include 'flash_messages.html' %}
-              {{ form.username.label }}
-              {{ form.username(class='form-control', placeholder="Enter your username") }}
-            </div>
-            <div class="form-group">
-              {{ form.password.label }}
-              {{ form.password(class='form-control', placeholder="Enter your password") }}
-            </div>
-          <button type="submit" name="submit" class="btn2 btn-primary btn-block">Log in</button>
-          <h5>Don't have an account? <a class="SignupLink" href="{{ url_for('signup') }}">Sign Up</a></h5>
-        </div>
-      </div>      
-    </form>
-  </div>
-  
+
+<div class="card" id="LoginDiv">
+  <h1>WELCOME TO WEEKLY DELIGHT!</h1>
+  <form class="Form" action="{{ url_for('login') }}" method="post">
+    {{ form.csrf_token }}
+    <div class="form-group">
+      {% include 'flash_messages.html' %}
+      {{ form.username.label }}
+      {{ form.username(class='form-control', id='form-field', placeholder="Enter your username") }}
+    </div>
+
+    <div class="from-group">
+      {{ form.password.label }}
+      {{ form.password(class='form-control', id='form-field', placeholder="Enter your password") }}
+    </div>
+
+    <div class="ButtonDiv">
+      <button type="submit" name="submit" class="btn btn-primary">Log in</button>
+    </div>
+
+    <h5>Don't have an account? <a class="SignupLink" href="{{ url_for('signup') }}">Sign Up</a></h5>     
+  </form>
 </div>
 {% endblock %}

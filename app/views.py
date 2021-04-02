@@ -58,6 +58,11 @@ def logout():
     flash('You have been logged out.', 'danger')
     return redirect(url_for('home'))
 
+@app.route("/profile")
+# @login_required
+def profile():
+
+    return render_template("profile.html")
 
 @app.route('/recipe', methods=['POST', 'GET'])
 def recipe():
@@ -73,6 +78,9 @@ def recipe():
         procedure = recipeform.procedure.data
         mealtype = recipeform.mealtype.data
         servings = recipeform.servings.data
+        photo = form.photo.data
+        filename = secure_filename(photo.filename)
+        photo.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
 
         flash('YOu have sucessfully added a recipe', 'success')
         return render_template()
@@ -113,6 +121,10 @@ def signup():
         dietaryrestrictions = form.dietaryrestrictions.data 
         goal = form.goals.data
         dailycalories = form.dailycalories.data
+        photo = form.photo.data
+        filename = secure_filename(photo.filename)
+        photo.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
+
         flash("Signup Successful!", 'success')
         return redirect(url_for('home'))
     return render_template('signup.html',form=form)
