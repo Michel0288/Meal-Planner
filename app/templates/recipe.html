@@ -1,10 +1,11 @@
 {% extends "base.html" %}
 
 {% block main %}
+<script src="/app/static/js/app.js"></script>
 <div class="card">
     <h1 class="page-header">ADD RECIPES AND INGREDIENTS</h1>
 <h3>RECIPE</h3>
-<form action="{{ url_for('recipe') }}" method="post">
+<form enctype="multipart/form-data" action="{{ url_for('recipe') }}" method="POST">
 
     {{ form.csrf_token }}
 
@@ -72,7 +73,7 @@
         </div>
 
         <div class="col">
-            <button type="send" class="btn btn-primary" id="IngredientsButton">More Ingredients</button> 
+            <button onclick="AddField(); return false;" class="btn btn-primary" id="IngredientsButton">More Ingredients</button> 
         </div>
     </div>
  

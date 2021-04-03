@@ -52,7 +52,7 @@ def login():
             session['loggedin'] = True
             session['id'] = user['account_id']
             session['username'] = user['username']
-            flash('Success.', 'danger')
+            flash('Success.', 'success')
             return redirect(url_for('home'))
         else:
             flash('Error.', 'danger')
@@ -81,29 +81,53 @@ def logout():
 @app.route("/profile")
 # @login_required
 def profile():
-
-    return render_template("profile.html")
+    cur = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
+    
+    if "loggedin" in session:
+        cur.execute('SELECT * FROM account WHERE account_id = %s', (session['id'],))        
+        user = cur.fetchone()
+        # firstname = user['firstname']
+        # lastname = user['lastname']
+        # username = user['username']
+        # firstname = user['firstname']
+        # age = user['age']
+        # gender = user['gender']
+        # weight = user['weight']
+        # height = user['height']
+        
+        return render_template("profile.html", user=user)
 
 @app.route('/recipe', methods=['POST', 'GET'])
 def recipe():
     recipeform=RecipeForm()
 
     if request.method == 'POST' and recipeform.validate_on_submit():
-        ingredient_name = recipeform.ingredient_name.data
-        measurements = recipeform.measurements.data
-        calories = recipeform.calories.data
         recipe_name = recipeform.recipe_name.data
+        instructions = recipeform.procedure.data
         prep_time = recipeform.prep_time.data
         cook_time = recipeform.cook_time.data
-        procedure = recipeform.procedure.data
         mealtype = recipeform.mealtype.data
         servings = recipeform.servings.data
-        photo = form.photo.data
+        photo = recipeform.photo.data
         filename = secure_filename(photo.filename)
         photo.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
 
-        flash('YOu have sucessfully added a recipe', 'success')
-        return render_template()
+        cur=mysql.connection.cursor()
+        cur.execute("INSERT INTO recipe (recipe_name,instructions,preparation_time,cooking_time,meal_type,servings,photo) VALUES (%s,%s,%s,%s,%s,%s,%s)", (recipe_name,instructions,prep_time,cook_time,mealtype,servings,filename))
+        mysql.connection.commit()
+        cur.close()
+
+        ingredient_name = recipeform.ingredient_name.data
+        calories = recipeform.calories.data
+        measurements = recipeform.measurements.data
+
+        cur=mysql.connection.cursor()
+        cur.execute("INSERT INTO ingredients (ingredient_name,calories_count,measurement) VALUES (%s,%s,%s)", (ingredient_name, calories, measurements))
+        mysql.connection.commit()
+        cur.close()
+
+        flash('You have sucessfully added a recipe', 'success')
+        return redirect(url_for('home'))
     
     flash_errors(recipeform)
     return render_template('recipe.html', form=recipeform)
@@ -146,7 +170,7 @@ def signup():
         photo.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
 
         cur=mysql.connection.cursor()
-        cur.execute("INSERT INTO account (firstname,lastname,username,password,age,gender,height,weight,allergies,dietarylifestyle,dietaryrestrictions,goal,dailycalories,photo) VALUES (%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)", (firstname,lastname,username,password,age,gender,height,weight,allergies,dietarylifestyle,dietaryrestrictions,goal,dailycalories,photo))
+        cur.execute("INSERT INTO account (firstname,lastname,username,password,age,gender,height,weight,allergies,dietarylifestyle,dietaryrestrictions,goal,dailycalories,photo) VALUES (%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)", (firstname,lastname,username,password,age,gender,height,weight,allergies,dietarylifestyle,dietaryrestrictions,goal,dailycalories,filename))
         mysql.connection.commit()
         cur.close()
         flash("Signup Successful!", 'success')
