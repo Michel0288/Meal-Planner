@@ -3,7 +3,7 @@
 
 <div class="card" id="LoginDiv">
   <h1>WELCOME TO WEEKLY DELIGHT!</h1>
-  <form class="Form" action="{{ url_for('login') }}" method="post">
+  <form class="Form" action="{{ url_for('login') }}" method="POST">
     {{ form.csrf_token }}
     <div class="form-group">
       {% include 'flash_messages.html' %}

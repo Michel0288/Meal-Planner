@@ -5,13 +5,13 @@
   <h1>WELCOME TO WEEKLY DELIGHT!</h1>
   <h3>SIGN UP</h3>
   {% include 'flash_messages.html' %}
-  <form class="Form" action="{{ url_for('signup') }}" method="post">
+  <form class="Form" enctype="multipart/form-data" action="{{ url_for('signup') }}" method="POST">
     {{ form.csrf_token }}
 
     <div class="row">
       <div class="col">
         {{ form.firstname.label }} <span>(Required)</span> <br>
-        {{ form.firstname.description }}
+        {{ form.firstname.description }}s
         {{ form.firstname(class='form-control') }}
       </div>
 
