@@ -11,8 +11,17 @@ from werkzeug.utils import secure_filename
 from .forms import RecipeForm, SignUpForm, LoginForm
 from flask_login import login_user, logout_user, current_user, login_required
 from werkzeug.security import check_password_hash
+from flask_mysqldb import MySQL
+import MySQLdb.cursors
 
 
+
+app.config['MYSQL_HOST']='127.0.0.1'
+app.config['MYSQL_USER']='root'
+app.config['MYSQL_PASSWORD']=''
+app.config['MYSQL_DB']='meal_planner'
+
+mysql=MySQL(app)
 
 ###
 # Routing for your application.
@@ -32,12 +41,22 @@ def about():
 @app.route("/login", methods=["GET", "POST"])
 def login():
     form = LoginForm()
-    # if current_user.is_authenticated:
-    #     return redirect(url_for('secure_page'))
     if request.method == "POST" and form.validate_on_submit():
         username = form.username.data
         password = form.password.data
-
+        cur = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
+        cur.execute('SELECT * FROM account WHERE username = % s AND password = % s', (username, password))        
+        user = cur.fetchone()
+        
+        if user:
+            session['loggedin'] = True
+            session['id'] = user['account_id']
+            session['username'] = user['username']
+            flash('Success.', 'danger')
+            return redirect(url_for('home'))
+        else:
+            flash('Error.', 'danger')
+            return "error"
         # user = UserProfile.query.filter_by(username=username).first()
         # if user is not None and check_password_hash(user.password,password):
         #     remember_me = False
@@ -54,9 +73,10 @@ def login():
 @app.route("/logout")
 @login_required
 def logout():
-    logout_user()
-    flash('You have been logged out.', 'danger')
-    return redirect(url_for('home'))
+    session.pop('loggedin', None)
+    session.pop('id', None)
+    session.pop('username', None)
+    return redirect(url_for('login'))    
 
 @app.route("/profile")
 # @login_required
@@ -81,6 +101,7 @@ def recipe():
         photo = form.photo.data
         filename = secure_filename(photo.filename)
         photo.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
+
 
         flash('YOu have sucessfully added a recipe', 'success')
         return render_template()
@@ -109,7 +130,7 @@ def signup():
     form = SignUpForm()
     if request.method == 'POST' and form.validate_on_submit():
         firstname = form.firstname.data
-        lastname = form.last.data
+        lastname = form.lastname.data
         username = form.username.data
         password = form.password.data
         age = form.age.data
@@ -119,14 +140,18 @@ def signup():
         allergies = form.allergies.data
         dietarylifestyle = form.dietarylifestyle.data
         dietaryrestrictions = form.dietaryrestrictions.data 
-        goal = form.goals.data
+        goal = form.goal.data
         dailycalories = form.dailycalories.data
         photo = form.photo.data
         filename = secure_filename(photo.filename)
         photo.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
 
+        cur=mysql.connection.cursor()
+        cur.execute("INSERT INTO account (firstname,lastname,username,password,age,gender,height,weight,allergies,dietarylifestyle,dietaryrestrictions,goal,dailycalories,photo) VALUES (%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)", (firstname,lastname,username,password,age,gender,height,weight,allergies,dietarylifestyle,dietaryrestrictions,goal,dailycalories,photo))
+        mysql.connection.commit()
+        cur.close()
         flash("Signup Successful!", 'success')
-        return redirect(url_for('home'))
+        return redirect(url_for('login'))
     return render_template('signup.html',form=form)
 ###
 # The functions below should be applicable to all Flask apps.

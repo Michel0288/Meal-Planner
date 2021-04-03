@@ -11,3 +11,8 @@ Flask-Script==2.0.6
 Flask-SQLAlchemy==2.5.1
 SQLAlchemy==1.4.2
 Flask-Login
+flask_mysql
+flask_mysqldb
+pandas
+faker 
+collection
