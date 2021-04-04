@@ -8,7 +8,7 @@ import os
 from app import app
 from flask import render_template, request, redirect, url_for, flash, session, abort,send_from_directory
 from werkzeug.utils import secure_filename
-from .forms import RecipeForm, SignUpForm, LoginForm
+from .forms import RecipeForm, SignUpForm, LoginForm, SearchForm
 from flask_login import login_user, logout_user, current_user, login_required
 from werkzeug.security import check_password_hash
 from flask_mysqldb import MySQL
@@ -52,7 +52,7 @@ def login():
             session['loggedin'] = True
             session['id'] = user['account_id']
             session['username'] = user['username']
-            flash('Success.', 'danger')
+            flash('Success.', 'success')
             return redirect(url_for('home'))
         else:
             flash('Error.', 'danger')
@@ -81,33 +81,106 @@ def logout():
 @app.route("/profile")
 # @login_required
 def profile():
-
-    return render_template("profile.html")
+    cur = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
+    
+    if "loggedin" in session:
+        cur.execute('SELECT * FROM account WHERE account_id = %s', (session['id'],))        
+        user = cur.fetchone()
+        # firstname = user['firstname']
+        # lastname = user['lastname']
+        # username = user['username']
+        # firstname = user['firstname']
+        # age = user['age']
+        # gender = user['gender']
+        # weight = user['weight']
+        # height = user['height']
+        
+        return render_template("profile.html", user=user)
 
 @app.route('/recipe', methods=['POST', 'GET'])
 def recipe():
     recipeform=RecipeForm()
 
     if request.method == 'POST' and recipeform.validate_on_submit():
-        ingredient_name = recipeform.ingredient_name.data
-        measurements = recipeform.measurements.data
-        calories = recipeform.calories.data
         recipe_name = recipeform.recipe_name.data
+        instructions = recipeform.procedure.data
         prep_time = recipeform.prep_time.data
         cook_time = recipeform.cook_time.data
-        procedure = recipeform.procedure.data
         mealtype = recipeform.mealtype.data
         servings = recipeform.servings.data
-        photo = form.photo.data
+        photo = recipeform.photo.data
         filename = secure_filename(photo.filename)
         photo.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
 
+        cur=mysql.connection.cursor()
+        cur.execute("INSERT INTO recipe (recipe_name,instructions,preparation_time,cooking_time,meal_type,servings,photo) VALUES (%s,%s,%s,%s,%s,%s,%s)", (recipe_name,instructions,prep_time,cook_time,mealtype,servings,filename))
+        mysql.connection.commit()
+        cur.close()
 
-        flash('YOu have sucessfully added a recipe', 'success')
-        return render_template()
+        ingredient_name = recipeform.ingredient_name.data
+        calories = recipeform.calories.data
+        measurements = recipeform.measurements.data
+
+        cur=mysql.connection.cursor()
+        cur.execute("INSERT INTO ingredients (ingredient_name,calories_count,measurement) VALUES (%s,%s,%s)", (ingredient_name, calories, measurements))
+        mysql.connection.commit()
+        cur.close()
+
+        flash('You have sucessfully added a recipe', 'success')
+        return redirect(url_for('home'))
     
     flash_errors(recipeform)
     return render_template('recipe.html', form=recipeform)
+
+# @app.route("/view_meals")
+# def view_meals():
+
+#     cur = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
+    
+#     if "loggedin" in session:
+#         cur.execute('SELECT * FROM recipe ORDER BY recipe_id')        
+#         recipes = cur.fetchall()
+    
+#         return render_template('view_meals.html', recipes=recipes)
+
+@app.route("/meal_detail/<id>")
+def meal_detail(id):
+
+    cur = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
+    
+    if "loggedin" in session:
+        cur.execute('SELECT * FROM recipe WHERE recipe_id = %s', (id))        
+        recipes = cur.fetchall()
+
+        # cur.execute('SELECT * FROM recipe WHERE recipe_id = %s', (id))     
+        # ingredients = cur.fetchall()
+    
+    return render_template('meal_detail.html', recipes=recipes)
+
+@app.route("/search_meal", methods=["GET", "POST"])
+def search_meal():
+    form = SearchForm()
+
+    if request.method == 'POST' and form.validate_on_submit():
+        search = form.search.data
+
+        cur = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
+        cur.execute('SELECT * FROM recipe WHERE recipe_name like %s', ('%' + search + '%',))        
+        recipes = cur.fetchall()
+
+        return render_template('view_meals.html', recipes=recipes, form=form)
+    else:
+
+        cur = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
+        cur.execute('SELECT * FROM recipe ORDER BY recipe_id')        
+        recipes = cur.fetchall()
+    
+        return render_template('view_meals.html', recipes=recipes, form=form)
+
+    
+    
+
+
 
 def get_uploaded_images():
     rootdir = os.getcwd()
@@ -147,7 +220,7 @@ def signup():
         photo.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
 
         cur=mysql.connection.cursor()
-        cur.execute("INSERT INTO account (firstname,lastname,username,password,age,gender,height,weight,allergies,dietarylifestyle,dietaryrestrictions,goal,dailycalories,photo) VALUES (%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)", (firstname,lastname,username,password,age,gender,height,weight,allergies,dietarylifestyle,dietaryrestrictions,goal,dailycalories,photo))
+        cur.execute("INSERT INTO account (firstname,lastname,username,password,age,gender,height,weight,allergies,dietarylifestyle,dietaryrestrictions,goal,dailycalories,photo) VALUES (%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)", (firstname,lastname,username,password,age,gender,height,weight,allergies,dietarylifestyle,dietaryrestrictions,goal,dailycalories,filename))
         mysql.connection.commit()
         cur.close()
         flash("Signup Successful!", 'success')

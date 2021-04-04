@@ -38,3 +38,7 @@ class RecipeForm(FlaskForm):
     mealtype = SelectField('Meal Type', choices= [('Breakfast'), ('Lunch'), ('Dinner')], validators=[Optional()], description="Please select type of meal.")  
     servings = IntegerField('Servings',validators=[DataRequired()], description="Please enter amount of servings.")
     photo = FileField('Photo', validators=[FileRequired(), FileAllowed(['jpg', 'png', 'Photos only!'])], description="Add a Photo of the meal.")
+
+
+class SearchForm(FlaskForm):
+    search = StringField('Search', description="Please enter meal you wish to search for.")
