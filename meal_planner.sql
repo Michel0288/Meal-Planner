@@ -37,11 +37,9 @@ CREATE TABLE recipe(
 
 DROP TABLE IF EXISTS ingredients;
 CREATE TABLE ingredients(
-    recipe_id INT NOT NULL,
     ingredient_id INT NOT NULL unique AUTO_INCREMENT,
     ingredient_name VARCHAR(200),
     calories_count INT,
     measurement VARCHAR(5000),
-    PRIMARY KEY(recipe_id, ingredient_id),
-    FOREIGN KEY(recipe_id) REFERENCES recipe(recipe_id) on DELETE CASCADE ON UPDATE CASCADE
+    PRIMARY KEY(ingredient_id)
 );

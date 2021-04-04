@@ -1,6 +1,63 @@
 {% extends "base.html" %}
 
 {% block main %}
-<h1>MEALS</h1>
+<h1>MEAL DETAILS</h1>
 
+<div class="RecipeCards2">
+    {% for recipe in recipes %}
+    <div class="card" id="cardid">
+        <div class="RecipeImageDiv">
+            <img class="RecipeImage2" src="/uploads/{{recipe.photo}}" alt="Recipe Image">
+        </div>
+        <div class="RecipeInfoDiv">
+            <div>
+                <h2 class="card-title" id="Recipename" style="font-weight: bolder; text-align: center;">{{recipe.recipe_name}}</h2>
+            </div>
+            <div class="row">
+                <p class="card-procedure" id="Recipeprocedure">Instructions: {{recipe.instructions}}</p>
+            </div>
+    
+            <div class="row" id="RowFlex" style="padding-bottom: 5px;">
+                <div class="" style="margin-right: 40px; margin-left: 100px;">
+                    <h5 class="card-mealtype" id="Recipemealtype">{{recipe.meal_type}}</h5>
+                </div>
+                
+                <div class="">
+                    <h5 class="card-servings" id="Recipeservings">{{recipe.servings}} servings</h5>
+                </div>
+            </div>
+
+            <div class="row">
+                <h5 class="card-preptime" id="Recipepreptime">Preparation Time: {{recipe.preparation_time}}</h5>
+            </div>
+    
+            <div class="row" style="padding-bottom: 5px;">
+                <h5 class="card-cooktime" id="Recipecooktime">Cooking Time: {{recipe.cooking_time}}</h5>
+            </div>
+
+            <div class="row" style="padding-bottom: 5px;">
+                <h5 class="" id="Recipeingredients">Ingredients: </h5>
+            </div>
+
+            <div class="row" style="padding-bottom: 5px;">
+                <h5 class="" id="Recipemeasurements">Measurements: </h5>
+            </div>
+
+            <div class="row" style="padding-bottom: 5px;">
+                <h5 class="" id="RecipeCalories">Total Calories: </h5>
+            </div>
+    
+            <div class="btn1" style="text-align: center;">
+                <a href="#" class="btn btn-primary">Add Recipe</a>
+            </div>
+            
+        </div>
+        
+    </div>
+   
+    {% endfor %}
+
+    {% for ingredient in ingredients %}
+    {% endfor %}
+    
 {% endblock %}

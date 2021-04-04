@@ -8,7 +8,7 @@ import os
 from app import app
 from flask import render_template, request, redirect, url_for, flash, session, abort,send_from_directory
 from werkzeug.utils import secure_filename
-from .forms import RecipeForm, SignUpForm, LoginForm
+from .forms import RecipeForm, SignUpForm, LoginForm, SearchForm
 from flask_login import login_user, logout_user, current_user, login_required
 from werkzeug.security import check_password_hash
 from flask_mysqldb import MySQL
@@ -131,6 +131,56 @@ def recipe():
     
     flash_errors(recipeform)
     return render_template('recipe.html', form=recipeform)
+
+# @app.route("/view_meals")
+# def view_meals():
+
+#     cur = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
+    
+#     if "loggedin" in session:
+#         cur.execute('SELECT * FROM recipe ORDER BY recipe_id')        
+#         recipes = cur.fetchall()
+    
+#         return render_template('view_meals.html', recipes=recipes)
+
+@app.route("/meal_detail/<id>")
+def meal_detail(id):
+
+    cur = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
+    
+    if "loggedin" in session:
+        cur.execute('SELECT * FROM recipe WHERE recipe_id = %s', (id))        
+        recipes = cur.fetchall()
+
+        # cur.execute('SELECT * FROM recipe WHERE recipe_id = %s', (id))     
+        # ingredients = cur.fetchall()
+    
+    return render_template('meal_detail.html', recipes=recipes)
+
+@app.route("/search_meal", methods=["GET", "POST"])
+def search_meal():
+    form = SearchForm()
+
+    if request.method == 'POST' and form.validate_on_submit():
+        search = form.search.data
+
+        cur = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
+        cur.execute('SELECT * FROM recipe WHERE recipe_name like %s', ('%' + search + '%',))        
+        recipes = cur.fetchall()
+
+        return render_template('view_meals.html', recipes=recipes, form=form)
+    else:
+
+        cur = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
+        cur.execute('SELECT * FROM recipe ORDER BY recipe_id')        
+        recipes = cur.fetchall()
+    
+        return render_template('view_meals.html', recipes=recipes, form=form)
+
+    
+    
+
+
 
 def get_uploaded_images():
     rootdir = os.getcwd()
