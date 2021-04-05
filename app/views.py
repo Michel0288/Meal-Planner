@@ -144,16 +144,12 @@ def recipe():
         cur.close()
 
 
-
-        # split string 
-        # for loop 
-        # insert 
-        # close
-        
-        # cur=mysql.connection.cursor()
-        # cur.execute("INSERT INTO instructions (ingredient_name,calories_count,measurement,recipe_id) VALUES (%s,%s,%s,%s)", (ingredient_name, calories, measurements,recipe_id))
-        # mysql.connection.commit()
-        # cur.close()
+        instructionslst=instructions.split(',')
+        for i in range(len(instructionslst)):
+            cur=mysql.connection.cursor()
+            cur.execute("INSERT INTO instructions (step_no,instruction,recipe_id) VALUES (%s,%s,%s)", (i, instructionslst[i], recipe_id))
+            mysql.connection.commit()
+            cur.close()
         
 
         flash('You have sucessfully added a recipe', 'success')
