@@ -33,7 +33,6 @@ class RecipeForm(FlaskForm):
     calories = IntegerField('Calorie Count',validators=[DataRequired()], description="Please enter ingredient calories.")
     recipe_name = StringField('Recipe Name',validators=[DataRequired()], description="Please enter name of recipe.")
     prep_time = StringField('Preparation Time', validators=[DataRequired()], description="Please enter amount of time for prepare recipe.")
-    cook_time = StringField('Cooking Time', validators=[DataRequired()], description="Please enter amount of time to cook recipe." )
     procedure = StringField('Procedure', widget=TextArea(), validators=[DataRequired()], description="Please enter recipe procedure.")
     mealtype = SelectField('Meal Type', choices= [('Breakfast'), ('Lunch'), ('Dinner')], validators=[Optional()], description="Please select type of meal.")  
     servings = IntegerField('Servings',validators=[DataRequired()], description="Please enter amount of servings.")
@@ -42,3 +41,7 @@ class RecipeForm(FlaskForm):
 
 class SearchForm(FlaskForm):
     search = StringField('Search', description="Please enter meal you wish to search for.")
+
+class KitchenForm(FlaskForm):
+    stock_name = StringField('Stock Name', validators=[DataRequired()], description="Please enter stock name.")
+    quantity = IntegerField('Quantity', validators=[DataRequired()], description="Please enter kitchen stock.")
