@@ -73,6 +73,7 @@ def login():
 @app.route("/logout")
 def logout():
     session.pop('loggedin', None)
+    session.pop('mealcart', None)
     session.pop('id', None)
     session.pop('username', None)
     return redirect(url_for('login'))    
@@ -141,6 +142,19 @@ def recipe():
         cur.execute("INSERT INTO ingredients (ingredient_name,calories_count,measurement,recipe_id) VALUES (%s,%s,%s,%s)", (ingredient_name, calories, measurements,recipe_id))
         mysql.connection.commit()
         cur.close()
+
+
+
+        # split string 
+        # for loop 
+        # insert 
+        # close
+        
+        # cur=mysql.connection.cursor()
+        # cur.execute("INSERT INTO instructions (ingredient_name,calories_count,measurement,recipe_id) VALUES (%s,%s,%s,%s)", (ingredient_name, calories, measurements,recipe_id))
+        # mysql.connection.commit()
+        # cur.close()
+        
 
         flash('You have sucessfully added a recipe', 'success')
         return redirect(url_for('home'))
