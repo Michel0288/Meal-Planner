@@ -19,7 +19,7 @@ import MySQLdb.cursors
 app.config['MYSQL_HOST']='127.0.0.1'
 app.config['MYSQL_USER']='root'
 app.config['MYSQL_PASSWORD']=''
-app.config['MYSQL_DB']='meal_planner'
+app.config['MYSQL_DB']='mealplanner'
 
 mysql=MySQL(app)
 
@@ -208,7 +208,7 @@ def meal_detail(id):
         cur.execute('SELECT * FROM recipe WHERE recipe_id = %s', (id,))        
         recipes = cur.fetchall()
 
-        cur.execute('SELECT * FROM recipe WHERE recipe_id = %s', (id))     
+        cur.execute('SELECT * FROM recipe WHERE recipe_id = %s', (id,))     
         ingredients = cur.fetchall()
     
     return render_template('meal_detail.html', recipes=recipes,ingredients=ingredients)
@@ -232,10 +232,6 @@ def search_meal():
         recipes = cur.fetchall()
     
         return render_template('view_meals.html', recipes=recipes, form=form)
-
-    
-    
-
 
 
 def get_uploaded_images():

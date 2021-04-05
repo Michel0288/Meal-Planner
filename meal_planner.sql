@@ -1,6 +1,6 @@
-DROP DATABASE IF EXISTS meal_planner;
-CREATE DATABASE meal_planner;
-USE meal_planner;
+DROP DATABASE IF EXISTS mealplanner;
+CREATE DATABASE mealplanner;
+USE mealplanner;
 
 DROP TABLE IF EXISTS account;
 CREATE TABLE account(
