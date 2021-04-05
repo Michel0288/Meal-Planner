@@ -1,6 +1,6 @@
-DROP DATABASE IF EXISTS meal_planner;
-CREATE DATABASE meal_planner;
-USE meal_planner;
+DROP DATABASE IF EXISTS mealplanner;
+CREATE DATABASE mealplanner;
+USE mealplanner;
 
 DROP TABLE IF EXISTS account;
 CREATE TABLE account(
@@ -26,12 +26,11 @@ DROP TABLE IF EXISTS recipe;
 CREATE TABLE recipe(
     recipe_id INT NOT NULL unique AUTO_INCREMENT,
     recipe_name VARCHAR(200),
-    instructions VARCHAR(5000),
     preparation_time VARCHAR(150),
-    cooking_time VARCHAR(150),
     meal_type VARCHAR(50),
     servings INT,
     photo VARCHAR(200),
+    dateadded DATE DEFAULT NOW(),
     PRIMARY KEY(recipe_id)
 );
 
@@ -55,3 +54,37 @@ CREATE TABLE instructions(
     PRIMARY KEY(instruction_id),
     foreign key(recipe_id) references recipe(recipe_id) 
 );
+
+DROP TABLE IF EXISTS kitchen_stock;
+CREATE TABLE kitchen_stock(
+    stock_id INT NOT NULL unique AUTO_INCREMENT,
+    stock_name VARCHAR(200)
+    quantity INT,
+    PRIMARY KEY(stock_id)
+);
+
+DROP TABLE IF EXISTS meal_plan;
+CREATE TABLE meal_plan(
+    mealplan_id INT NOT NULL unique AUTO_INCREMENT,
+    meal_week DATE DEFAULT NOW()
+    recipe_id INT NOT NULL,
+    foreign key(recipe_id) references recipe(recipe_id) ON DELETE CASCADE ON UPDATE CASCADE
+);
+
+/*
+
+    meal_id
+    recipe_id INT NOT NULL unique AUTO_INCREMENT,
+    recipe_name VARCHAR(200),
+    meal_type VARCHAR(50),
+    servings INT,
+    photo VARCHAR(200),
+    totalcalories
+    PRIMARY KEY(recipe_id)
+
+    Make a procedure with a view table
+
+    create procedure for supermarket list
+
+
+*/

@@ -13,9 +13,6 @@
             <div>
                 <h2 class="card-title" id="Recipename" style="font-weight: bolder; text-align: center;">{{recipe.recipe_name}}</h2>
             </div>
-            <div class="row">
-                <p class="card-procedure" id="Recipeprocedure">Instructions: {{recipe.instructions}}</p>
-            </div>
     
             <div class="row" id="RowFlex" style="padding-bottom: 5px;">
                 <div class="" style="margin-right: 40px; margin-left: 100px;">
@@ -30,22 +27,28 @@
             <div class="row">
                 <h5 class="card-preptime" id="Recipepreptime">Preparation Time: {{recipe.preparation_time}}</h5>
             </div>
-    
+
+
+            {% for ingred in ingredient %}
             <div class="row" style="padding-bottom: 5px;">
-                <h5 class="card-cooktime" id="Recipecooktime">Cooking Time: {{recipe.cooking_time}}</h5>
+                <h5 class="" id="Recipeingredients">Ingredients: {{ingred['ingredient_name']}} </h5>
             </div>
 
             <div class="row" style="padding-bottom: 5px;">
-                <h5 class="" id="Recipeingredients">Ingredients: {{ingrdie}} </h5>
+                <h5 class="" id="Recipemeasurements">Measurements: {{ingred.measurement}} </h5>
             </div>
 
             <div class="row" style="padding-bottom: 5px;">
-                <h5 class="" id="Recipemeasurements">Measurements: </h5>
+                <h5 class="" id="RecipeCalories">Total Calories: {{ingred.calories_count}} </h5>
             </div>
+            {% endfor %}
 
-            <div class="row" style="padding-bottom: 5px;">
-                <h5 class="" id="RecipeCalories">Total Calories: </h5>
+            <h3 style="text-align:center;"> Instructions </h3>
+            {% for instruct in instruction%}
+            <div class="row">
+                <h5 class="card-procedure" id="Recipeprocedure">Step {{instruct.step_no}}: {{instruct.instruction}} </h5>
             </div>
+            {% endfor %}
                 
             <div class="btn1" style="text-align: center;">
                 <a href="#" class="btn btn-primary">Add Recipe</a>
@@ -57,7 +60,5 @@
    
     {% endfor %}
 
-    {% for ingredient in ingredients %}
-    {% endfor %}
     
 {% endblock %}

@@ -8,18 +8,18 @@ import os
 from app import app
 from flask import render_template, request, redirect, url_for, flash, session, abort,send_from_directory
 from werkzeug.utils import secure_filename
-from .forms import RecipeForm, SignUpForm, LoginForm, SearchForm
+from .forms import RecipeForm, SignUpForm, LoginForm, SearchForm,KitchenForm
 from flask_login import login_user, logout_user, current_user, login_required
 from werkzeug.security import check_password_hash
 from flask_mysqldb import MySQL
 import MySQLdb.cursors
-
+from datetime import date
 
 
 app.config['MYSQL_HOST']='127.0.0.1'
 app.config['MYSQL_USER']='root'
 app.config['MYSQL_PASSWORD']=''
-app.config['MYSQL_DB']='meal_planner'
+app.config['MYSQL_DB']='mealplanner'
 
 mysql=MySQL(app)
 
@@ -78,6 +78,13 @@ def logout():
     session.pop('username', None)
     return redirect(url_for('login'))    
 
+@app.route("/kitchen_stock")
+def kitchen_stock():
+    form=KitchenForm()
+    return render_template('kitchen_stock.html', form=form)
+
+
+
 @app.route("/profile")
 # @login_required
 def profile():
@@ -116,7 +123,6 @@ def recipe():
         recipe_name = recipeform.recipe_name.data
         instructions = recipeform.procedure.data
         prep_time = recipeform.prep_time.data
-        cook_time = recipeform.cook_time.data
         mealtype = recipeform.mealtype.data
         servings = recipeform.servings.data
         photo = recipeform.photo.data
@@ -124,7 +130,7 @@ def recipe():
         photo.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
 
         cur=mysql.connection.cursor()
-        cur.execute("INSERT INTO recipe (recipe_name,instructions,preparation_time,cooking_time,meal_type,servings,photo) VALUES (%s,%s,%s,%s,%s,%s,%s)", (recipe_name,instructions,prep_time,cook_time,mealtype,servings,filename))
+        cur.execute("INSERT INTO recipe(recipe_name,preparation_time,meal_type,servings,photo) VALUES (%s,%s,%s,%s,%s)", (recipe_name,prep_time,mealtype,servings,filename))
         mysql.connection.commit()
         cur.close()
 
@@ -211,17 +217,26 @@ def getmeals():
 
 @app.route("/meal_detail/<id>")
 def meal_detail(id):
+    form = SearchForm()
 
     cur = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
-    
-    if "loggedin" in session:
-        cur.execute('SELECT * FROM recipe WHERE recipe_id = %s', (id,))        
-        recipes = cur.fetchall()
 
-        cur.execute('SELECT * FROM recipe WHERE recipe_id = %s', (id))     
-        ingredients = cur.fetchall()
-    
-    return render_template('meal_detail.html', recipes=recipes,ingredients=ingredients)
+    cur.execute('SELECT * FROM ingredients WHERE recipe_id = %s', (id,))     
+    ingredient = cur.fetchall()
+    cur.close()
+
+    cur = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
+    cur.execute('SELECT * FROM recipe WHERE recipe_id = %s', (id,))        
+    recipes = cur.fetchall()
+    cur.close()
+
+    cur = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
+    cur.execute('SELECT * FROM instructions WHERE recipe_id = %s', (id,))        
+    instruction = cur.fetchall()
+    cur.close()
+
+    return render_template('meal_detail.html', ingredient=ingredient, recipes=recipes, instruction=instruction)
+    # return redirect(url_for("search_meal"))
 
 @app.route("/search_meal", methods=["GET", "POST"])
 def search_meal():
@@ -242,10 +257,6 @@ def search_meal():
         recipes = cur.fetchall()
     
         return render_template('view_meals.html', recipes=recipes, form=form)
-
-    
-    
-
 
 
 def get_uploaded_images():
