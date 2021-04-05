@@ -41,5 +41,17 @@ CREATE TABLE ingredients(
     ingredient_name VARCHAR(200),
     calories_count INT,
     measurement VARCHAR(5000),
-    PRIMARY KEY(ingredient_id)
+    recipe_id INT NOT NULL,
+    PRIMARY KEY(ingredient_id),
+    foreign key(recipe_id) references recipe(recipe_id) 
+);
+
+DROP TABLE IF EXISTS instructions;
+CREATE TABLE instructions(
+    instruction_id INT NOT NULL unique AUTO_INCREMENT,
+    step_no INT,
+    instruction VARCHAR(5000),
+    recipe_id INT NOT NULL,
+    PRIMARY KEY(instruction_id),
+    foreign key(recipe_id) references recipe(recipe_id) 
 );

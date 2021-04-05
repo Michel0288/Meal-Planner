@@ -1,0 +1,17 @@
+{% extends 'base.html' %}
+
+{% block main %}
+{{session['mealcart']}}
+{% for key,recipe in session['mealcart'].items()%}
+<div class="card" style="width: 18rem;">
+    <img class="card-img-top" src="/uploads/{{recipe.image}}" alt="Card image cap">
+    <div class="card-body">
+      <h5 class="card-title">{{recipe.name}}</h5>
+      <h5 class="card-title">{{recipe.name}}</h5>
+      <h5 class="card-title">{{recipe.name}}</h5>
+      <p class="card-text"></p>
+      <a href="#" class="btn btn-primary">Go somewhere</a>
+    </div>
+  </div>
+{% endfor%}
+{% endblock %}

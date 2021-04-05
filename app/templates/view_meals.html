@@ -33,7 +33,10 @@
                 <h5 class= "" id="Recipeservings">{{recipe.servings}} servings</h5>
             </div>           
         </div>  
-
+        <form  action="{{url_for('AddMeal')}}" method="POST">
+            <input type="hidden" name="recipe_id" value="{{recipe.recipe_id}}">
+            <button type="submit" class="btn btn-primary btn-sm">Add Recipe Btn</button>
+        </form>
         <div class="RecipeButtons" id="RecipeButtons">
             <div class="btn1">
                 <a href="#" class="btn btn-primary">Add Recipe</a>

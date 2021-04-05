@@ -15,10 +15,13 @@
       <li class="nav-item">
         <a class="nav-link" href="{{ url_for('search_meal') }}">View Meals</a>
       </li>
+      <li class="nav-item">
+        <a class="nav-link" href="{{ url_for('getmeals') }}">Meal Plan ({{session['mealcart']|length}})</a>
+      </li>
     </ul>
 
     <ul class="navbar-nav">
-        {% if not session.logged_in %}
+        {% if logged_in in session%}
             <li class="nav-item">
                 <a class="nav-link" href="{{ url_for('login') }}">Login</a>
             </li>

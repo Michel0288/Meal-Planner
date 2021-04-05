@@ -5,8 +5,27 @@
 <div class="card">
     <h1 class="page-header">ADD RECIPES AND INGREDIENTS</h1>
 <h3>RECIPE</h3>
-<form enctype="multipart/form-data" action="{{ url_for('recipe') }}" method="POST">
-
+<form enctype="multipart/form-data" action="{{ url_for('results') }}" method="POST">
+    <script>
+        function add_field()
+        {
+          var total_text=document.getElementsByClassName("input_text");
+          total_text=total_text.length+1;
+          field_div = document.getElementById("field_div");
+          new_input = "<li id='input_text"+total_text+"_wrapper'>";
+          new_input += "<input type='text' class='input_text' name='input_text[]' id='input_text"+
+          total_text+"' placeholder='Enter Text'>";
+          total_text+"'";
+          new_input += "</li>";
+          field_div.insertAdjacentHTML('beforeend',new_input);
+        }
+        function remove_field()
+        {
+          var total_text=document.getElementsByClassName("input_text");
+          document.getElementById("input_text"+total_text.length+"_wrapper").remove();     
+        }
+      </script>
+      
     {{ form.csrf_token }}
 
     <div class="form-group">
@@ -73,6 +92,13 @@
         </div>
 
         <div class="col">
+            <div id="wrapper">
+                <input type="button" value="Add TextBox" onclick="add_field();">
+                <input type="button" value="Remove TextBox" onclick="remove_field();">
+                <ol id="field_div">
+          
+                </ol>
+              </div>
             <button onclick="AddField(); return false;" class="btn btn-primary" id="IngredientsButton">More Ingredients</button> 
         </div>
     </div>

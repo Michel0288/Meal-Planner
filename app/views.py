@@ -71,7 +71,6 @@ def login():
     return render_template("login.html", form=form)
 
 @app.route("/logout")
-@login_required
 def logout():
     session.pop('loggedin', None)
     session.pop('id', None)
@@ -97,6 +96,17 @@ def profile():
         
         return render_template("profile.html", user=user)
 
+@app.route('/results', methods = ['GET', 'POST'])
+def results():
+    recipeform=RecipeForm()
+
+    if request.method == 'GET':
+        return render_template('recipe.html', form=recipeform)
+    else:
+        input_values = request.form.getlist('input_text[]')
+        return render_template('dynamic_input_results.html',
+                               input_values = input_values)
+
 @app.route('/recipe', methods=['POST', 'GET'])
 def recipe():
     recipeform=RecipeForm()
@@ -121,8 +131,14 @@ def recipe():
         calories = recipeform.calories.data
         measurements = recipeform.measurements.data
 
+        cur = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
+        cur.execute('SELECT MAX(recipe_id) FROM recipe')        
+        recipe_id = cur.fetchone()
+        recipe_id=recipe_id['MAX(recipe_id)']
+        cur.close()
+
         cur=mysql.connection.cursor()
-        cur.execute("INSERT INTO ingredients (ingredient_name,calories_count,measurement) VALUES (%s,%s,%s)", (ingredient_name, calories, measurements))
+        cur.execute("INSERT INTO ingredients (ingredient_name,calories_count,measurement,recipe_id) VALUES (%s,%s,%s,%s)", (ingredient_name, calories, measurements,recipe_id))
         mysql.connection.commit()
         cur.close()
 
@@ -143,19 +159,59 @@ def recipe():
     
 #         return render_template('view_meals.html', recipes=recipes)
 
+
+def MagerDicts(dict1,dict2):
+    if isinstance(dict1,list) and isinstance(dict2,list):
+        return dict1+dict2
+    elif isinstance(dict1,dict) and isinstance(dict2,dict):
+        return dict(list(dict1.items())+list(dict2.items()))
+    return False
+    
+@app.route("/AddMeal", methods=["GET", "POST"])
+def AddMeal():
+    recipe_id=request.form.get('recipe_id')
+    cur = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
+    cur.execute('SELECT * FROM recipe WHERE recipe_id = %s', (recipe_id,))        
+    meal = cur.fetchone()
+    if recipe_id and request.method=="POST":
+        DictItems={recipe_id:{'name': meal['recipe_name'],'time':meal['preparation_time'],'type': meal['meal_type'],'servings':meal['servings'],'image':meal['photo']}}
+        if 'mealcart' in session:
+            print(session['mealcart'])
+            if recipe_id in session['mealcart']:
+                print("Already in cart")
+                # for key,item in session['mealcart'].items():
+                #     if int(key)==int(recipe_id):
+                #         session.modified=True
+                        # meal['quantity'] += 1
+                    # Check over part 28 still not working
+            else:
+                session['mealcart']=MagerDicts(session['mealcart'],DictItems)
+                return redirect("search_meal")
+        else:
+            session['mealcart']=DictItems
+            return redirect("search_meal")
+    return redirect("search_meal")
+
+@app.route("/meal-plan")
+def getmeals():
+    if 'mealcart' not in session:
+        return redirect(request.referrer)
+    return render_template('meal_plan.html')
+
+
 @app.route("/meal_detail/<id>")
 def meal_detail(id):
 
     cur = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
     
     if "loggedin" in session:
-        cur.execute('SELECT * FROM recipe WHERE recipe_id = %s', (id))        
+        cur.execute('SELECT * FROM recipe WHERE recipe_id = %s', (id,))        
         recipes = cur.fetchall()
 
-        # cur.execute('SELECT * FROM recipe WHERE recipe_id = %s', (id))     
-        # ingredients = cur.fetchall()
+        cur.execute('SELECT * FROM recipe WHERE recipe_id = %s', (id))     
+        ingredients = cur.fetchall()
     
-    return render_template('meal_detail.html', recipes=recipes)
+    return render_template('meal_detail.html', recipes=recipes,ingredients=ingredients)
 
 @app.route("/search_meal", methods=["GET", "POST"])
 def search_meal():
