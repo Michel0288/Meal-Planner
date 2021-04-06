@@ -16,28 +16,12 @@
           new_input += "<input type='text' class='input_text' name='input_text[]' id='input_text"+
           total_text+"' placeholder='Enter Text'>";
           total_text+"'";
+          new_input += "<input type='text' name='input_cal' value='' placeholder='Enter Calories' id='input_checkbox"+
+          total_text+"'";
           new_input += "</li>";
           field_div.insertAdjacentHTML('beforeend',new_input);
         }
         function remove_field()
-        {
-          var total_text=document.getElementsByClassName("input_text");
-          document.getElementById("input_text"+total_text.length+"_wrapper").remove();     
-        }
-
-        function add_field2()
-        {
-          var total_text=document.getElementsByClassName("input_text");
-          total_text=total_text.length+1;
-          field_div2 = document.getElementById("field_div2");
-          new_input = "<li id='input_text"+total_text+"_wrapper'>";
-          new_input += "<input type='text' class='input_text' name='input_text[]' id='input_text"+
-          total_text+"' placeholder='Enter Text'>";
-          total_text+"'";
-          new_input += "</li>";
-          field_div2.insertAdjacentHTML('beforeend',new_input);
-        }
-        function remove_field2()
         {
           var total_text=document.getElementsByClassName("input_text");
           document.getElementById("input_text"+total_text.length+"_wrapper").remove();     
@@ -94,33 +78,18 @@
             {{ form.ingredient_name.description }}
             <div class="col">
                 <div id="wrapper">
+                    <input class="btn btn-primary" type="button" value="Add Ingredient" onclick="add_field();">
+                    <input class="btn btn-primary" type="button" value="Remove" onclick="remove_field();">
                     <ol id="field_div">
                     </ol>
-                    <div>
-                        <input class="btn btn-primary" type="button" value="Add Ingredient" onclick="add_field();">
-                    </div>
-                    <div>
-                        <input class="btn btn-primary" type="button" value="Remove Ingredient" onclick="remove_field();">
-                    </div>
                   </div> 
             </div>
         </div>
     
         <div class="col">
             {{ form.calories.label(class="title") }} <span>(Required)</span> <br>
-            {{ form.description }}
-            <div class="col">
-                <div id="wrapper2">
-                    <ol id="field_div2">
-                    </ol>
-                    <div>
-                        <input class="btn btn-primary" type="button" value="Add Calories" onclick="add_field2();">
-                    </div>
-                    <div>
-                        <input class="btn btn-primary" type="button" value="Remove Calories" onclick="remove_field2();">
-                    </div>
-                </div> 
-            </div>
+            {{ form.calories.description }}
+            {{ form.calories(class='form-control') }}
         </div>
     </div>
  
@@ -132,7 +101,7 @@
 
      <br>
     
-
+    <button type="submit" class="btn btn-primary">Add Recipe</button>
  </form>
 
 </div>

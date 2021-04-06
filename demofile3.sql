@@ -1,0 +1,10 @@
+INSERT INTO account VALUES("Robin","Campbell","Robin189","Campbell189",0,"Female","7 ft 3 in",192,"strawberries","Vegan","Maintain Weight","db5.png");
+INSERT INTO account VALUES("Kathleen","Miller","Kathleen49","Miller49",39,"Female","1 ft 8 in",823,"beef","Vegan","None","db4.png");
+INSERT INTO account VALUES("Melinda","Baldwin","Melinda246","Baldwin246",15,"Male","2 ft 3 in",998,"soy","Vegetarian","Gain Weight","db2.png");
+INSERT INTO account VALUES("William","Allen","William381","Allen381",48,"Female","6 ft 5 in",569,"peanuts","Vegan","None","db4.png");
+INSERT INTO account VALUES("Tony","Swanson","Tony946","Swanson946",93,"Female","8 ft 2 in",778,"peanuts","Vegetarian","Gain Weight","db2.png");
+INSERT INTO account VALUES("Brandy","Landry","Brandy824","Landry824",82,"Male","5 ft 6 in",662,"shellfish","Vegetarian","Gain Weight","db4.png");
+INSERT INTO account VALUES("Kathleen","Hall","Kathleen219","Hall219",29,"Male","5 ft 5 in",595,"beef","Vegan","Maintain Weight","db1.jpg");
+INSERT INTO account VALUES("Jason","Beck","Jason773","Beck773",87,"Male","2 ft 1 in",481,"pollen","Pescatarian","Lose Weight","db1.jpg");
+INSERT INTO account VALUES("Timothy","Austin","Timothy605","Austin605",87,"Male","2 ft 1 in",824,"peanuts","Vegan","Maintain Weight","db5.png");
+INSERT INTO account VALUES("William","Nunez","William929","Nunez929",21,"Male","4 ft 1 in",518,"chocolate","Vegan","Lose Weight","db4.png");

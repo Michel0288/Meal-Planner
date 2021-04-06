@@ -126,14 +126,15 @@ def results():
         return render_template('recipe.html', form=recipeform)
     else:
         input_values = request.form.getlist('input_text[]')
+        input_values2 = request.form.getlist('input_cal')
         return render_template('dynamic_input_results.html',
-                               input_values = input_values)
+                               input_values = input_values,input_values2=input_values2)
 
 @app.route('/recipe', methods=['POST', 'GET'])
 def recipe():
     recipeform=RecipeForm()
 
-    if request.method == 'POST' and recipeform.validate_on_submit():
+    if request.method == 'POST' :
         recipe_name = recipeform.recipe_name.data
         instructions = recipeform.procedure.data
         prep_time = recipeform.prep_time.data
@@ -142,14 +143,20 @@ def recipe():
         photo = recipeform.photo.data
         filename = secure_filename(photo.filename)
         photo.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
-
+        ingredients_name = request.form.getlist('input_text[]')
+        calories = request.form.getlist('input_cal')
+        totalcalories=0
+        for i in calories:
+            totalcalories+=int(i)
         cur=mysql.connection.cursor()
-        cur.execute("INSERT INTO recipe(recipe_name,preparation_time,meal_type,servings,photo) VALUES (%s,%s,%s,%s,%s)", (recipe_name,prep_time,mealtype,servings,filename))
+        cur.execute("INSERT INTO recipe(recipe_name,preparation_time,meal_type,servings,photo,totalcalories) VALUES (%s,%s,%s,%s,%s,%s)", (recipe_name,prep_time,mealtype,servings,filename,totalcalories))
         mysql.connection.commit()
         cur.close()
 
-        ingredient_name = recipeform.ingredient_name.data
-        calories = recipeform.calories.data
+
+
+        # ingredient_name = recipeform.ingredient_name.data
+        # calories = recipeform.calories.data
         measurements = recipeform.measurements.data
 
         cur = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
@@ -158,10 +165,12 @@ def recipe():
         recipe_id=recipe_id['MAX(recipe_id)']
         cur.close()
 
-        cur=mysql.connection.cursor()
-        cur.execute("INSERT INTO ingredients (ingredient_name,calories_count,measurement,recipe_id) VALUES (%s,%s,%s,%s)", (ingredient_name, calories, measurements,recipe_id))
-        mysql.connection.commit()
-        cur.close()
+
+        for i in range(len(ingredients_name)):
+            cur=mysql.connection.cursor()
+            cur.execute("INSERT INTO ingredients (ingredient_name,calories_count,measurement,recipe_id) VALUES (%s,%s,%s,%s)", (ingredients_name[i], calories[i], measurements,recipe_id))
+            mysql.connection.commit()
+            cur.close()
 
 
         instructionslst=instructions.split(',')
@@ -297,7 +306,8 @@ def search_meal():
         search = form.search.data
 
         cur = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
-        cur.execute('SELECT * FROM recipe WHERE recipe_name like %s', ('%' + search + '%',))        
+        cur.execute('SELECT * FROM recipe WHERE recipe_name like %s OR totalcalories <= %s', ('%' + search + '%', search,)) 
+        cur.execute('CALL SearchFilter(%s)', (search,))        
         recipes = cur.fetchall()
 
         return render_template('view_meals.html', recipes=recipes, form=form)

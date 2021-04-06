@@ -11,13 +11,11 @@ CREATE TABLE account(
     password VARCHAR(50) NOT NULL,
     age INT NOT NULL,
     gender VARCHAR (6) NOT NULL,
-    height INT NOT NULL,
+    height VARCHAR(15),
     weight INT NOT NULL,
     allergies VARCHAR (50),
     dietarylifestyle VARCHAR(50), 
-    dietaryrestrictions VARCHAR(50),
     goal VARCHAR(50),
-    dailycalories INT,
     photo VARCHAR(200),
     PRIMARY KEY(account_id)
 );
@@ -55,13 +53,17 @@ CREATE TABLE instructions(
     PRIMARY KEY(instruction_id),
     foreign key(recipe_id) references recipe(recipe_id) 
 );
+/* SELECT stock_name FROM kitchen_stock JOIN ingredients ON stock_name=ingredient_name;
 
+SELECT ingredient_name FROM ingredients JOIN recipe on ingredients.recipe_id=recipe.recipe_id JOIN meal_plan on meal_plan.recipe_id = recipe.recipe_id WHERE ingredient_name NOT IN (SELECT stock_name FROM kitchen_stock;); */
 DROP TABLE IF EXISTS kitchen_stock;
 CREATE TABLE kitchen_stock(
     stock_id INT NOT NULL unique AUTO_INCREMENT,
-    stock_name VARCHAR(200)
+    mealplan_id INT NOT NULL,
+    stock_name VARCHAR(200),
     quantity INT,
-    PRIMARY KEY(stock_id)
+    PRIMARY KEY(stock_id),
+    FOREIGN KEY(mealplan_id) REFERENCES meal_plan(mealplan_id) ON DELETE CASCADE ON UPDATE CASCADE
 );
 
 DROP TABLE IF EXISTS meal_plan;
@@ -73,6 +75,24 @@ CREATE TABLE meal_plan(
     foreign key(recipe_id) references recipe(recipe_id) ON DELETE CASCADE ON UPDATE CASCADE,
     foreign key(account_id) references account(account_id) 
 );
+
+DELIMITER //
+CREATE PROCEDURE SearchFilter(IN searchitem VARCHAR(100))
+BEGIN
+SELECT * FROM recipe WHERE recipe_name like %searchitem% OR totalcalories <= searchitem;
+END //
+DELIMITER ;
+
+/*
+PROCEDURE FOR SUPERMARKET LIST (DELETE THIS LINE AND UNCOMMENT PROCEDURE)
+DELIMITER //
+CREATE PROCEDURE supermarketlist
+BEGIN
+SELECT ingredient_name FROM recipe JOIN meal_plan on meal_plan.recipe_id = recipe.recipe_id WHERE ingredient_name NOT IN (SELECT ingredient_name FROM kitchen_stock;);
+END //
+DELIMITER ;
+*/
+
 /* 
 DROP TABLE IF EXISTS meal;
 CREATE TABLE meal(
