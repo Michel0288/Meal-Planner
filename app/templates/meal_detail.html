@@ -5,7 +5,7 @@
 
 <div class="RecipeCards2">
     {% for recipe in recipes %}
-    <div class="card" id="cardid">
+    <div class="card" id="cardid" style="width:1000px;">
         <div class="RecipeImageDiv">
             <img class="RecipeImage2" src="/uploads/{{recipe.photo}}" alt="Recipe Image">
         </div>
@@ -31,7 +31,7 @@
 
             {% for ingred in ingredient %}
             <div class="row" style="padding-bottom: 5px;">
-                <h5 class="" id="Recipeingredients">Ingredients: {{ingred['ingredient_name']}} </h5>
+                <h5 class="" id="Recipeingredients">Ingredients: {{ingred.ingredient_name}} </h5>
             </div>
 
             <div class="row" style="padding-bottom: 5px;">
@@ -44,7 +44,7 @@
             {% endfor %}
 
             <h3 style="text-align:center;"> Instructions </h3>
-            {% for instruct in instruction%}
+            {% for instruct in instruction %}
             <div class="row">
                 <h5 class="card-procedure" id="Recipeprocedure">Step {{instruct.step_no}}: {{instruct.instruction}} </h5>
             </div>

@@ -6,11 +6,11 @@ fake = Faker()
 fake_data = defaultdict(list)
 
 
-for _ in range(100):
-    fake_data["building_number"].append( fake.building_number() )
-    fake_data["first_name"].append( fake.first_name() )
-    fake_data["last_name"].append( fake.last_name() )
+for i in range(100):
+    fake_data["account_id"].append(i+1)
+    fake_data["firstname"].append( fake.first_name() )
+    fake_data["lastname"].append( fake.last_name() )
 df_fake_data = pd.DataFrame(fake_data)
-engine = create_engine('mysql://root:@127.0.0.1/test2', echo=False)
-df_fake_data.to_sql('user4', con=engine,index=False)
-
+print(df_fake_data)
+# engine = create_engine('mysql://root:@127.0.0.1/test2', echo=False)
+# df_fake_data.to_sql('user', con=engine,index=False)

@@ -13,13 +13,13 @@ from flask_login import login_user, logout_user, current_user, login_required
 from werkzeug.security import check_password_hash
 from flask_mysqldb import MySQL
 import MySQLdb.cursors
-from datetime import date
+from datetime import date, timedelta
 
 
 app.config['MYSQL_HOST']='127.0.0.1'
 app.config['MYSQL_USER']='root'
 app.config['MYSQL_PASSWORD']=''
-app.config['MYSQL_DB']='mealplanner'
+app.config['MYSQL_DB']='meal_planner'
 
 mysql=MySQL(app)
 
@@ -88,8 +88,16 @@ def kitchen_stock():
 @app.route("/profile")
 # @login_required
 def profile():
-    cur = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
+   
+
+    # cur = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
+    # cur.execute('SELECT * FROM recipe WHERE recipe_id = %s', (p_meals['recipe_id']))     
+    # p_recipe = cur.fetchall()
+    # cur.close()
     
+
+
+    cur = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
     if "loggedin" in session:
         cur.execute('SELECT * FROM account WHERE account_id = %s', (session['id'],))        
         user = cur.fetchone()
@@ -101,8 +109,14 @@ def profile():
         # gender = user['gender']
         # weight = user['weight']
         # height = user['height']
+
+        cur = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
+        # cur.execute('SELECT * FROM meal_plan join instructions on recipe_id join ingredients on recipe_id WHERE account_id = %s and', (session['id'],)) 
+        cur.execute('SELECT * FROM meal_plan JOIN instructions ON instructions.recipe_id=meal_plan.recipe_id JOIN recipe ON recipe.recipe_id=meal_plan.recipe_id JOIN ingredients ON ingredients.recipe_id=meal_plan.recipe_id')     
+        p_meals = cur.fetchall()
+        cur.close()
         
-        return render_template("profile.html", user=user)
+    return render_template("profile.html", user=user,p_meals=p_meals)
 
 @app.route('/results', methods = ['GET', 'POST'])
 def results():
@@ -189,6 +203,7 @@ def AddMeal():
     cur = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
     cur.execute('SELECT * FROM recipe WHERE recipe_id = %s', (recipe_id,))        
     meal = cur.fetchone()
+    cur.close()
     if recipe_id and request.method=="POST":
         DictItems={recipe_id:{'name': meal['recipe_name'],'time':meal['preparation_time'],'type': meal['meal_type'],'servings':meal['servings'],'image':meal['photo']}}
         if 'mealcart' in session:
@@ -208,11 +223,48 @@ def AddMeal():
             return redirect("search_meal")
     return redirect("search_meal")
 
+
+@app.route("/deleteitemcart/<code>")
+def deleteitemcart(code):
+    if 'mealcart' not in session and len(session['mealcart'])<=0:
+        return redirect('menu')
+    session.modifed=True
+    for key,item in session['mealcart'].items():
+        if key==code:
+            session['mealcart'].pop(key,None)
+            flash('Item Removed','success')
+            return redirect(url_for('getmeals'))
+    return redirect(url_for('getmeals'))
+
+@app.route('/checkout', methods=['POST', 'GET'])
+def checkout():
+    week_date=request.form.get('week-date')
+    if request.method=='POST':
+        for key,item in session['mealcart'].items():
+            cur=mysql.connection.cursor()
+            cur.execute("INSERT INTO meal_plan (meal_week,recipe_id,account_id) VALUES (%s,%s,%s)", (week_date, key, session['id'],))
+            mysql.connection.commit()
+            cur.close()
+        # session.pop('mealcart', None)
+        return redirect(url_for('search_meal'))
+    return render_template('meal_plan.html')
+
 @app.route("/meal-plan")
 def getmeals():
+    cur = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
+    cur.execute('SELECT MAX(meal_week) FROM meal_plan WHERE account_id = %s', (session['id'],))        
+    week = cur.fetchone()
+    cur.close()
+    week=week['MAX(meal_week)']
+    #probablt afi pop d time
+    #try stroring in list and then pop n add
+    #test the date part still not fix 
+    # if(week=='None'):
+    #     week=week['MAX(meal_week)']+timedelta(days=10)
+    newdate = date.today()
     if 'mealcart' not in session:
         return redirect(request.referrer)
-    return render_template('meal_plan.html')
+    return render_template('meal_plan.html',week=week,newdate=newdate)
 
 
 @app.route("/meal_detail/<id>")
@@ -220,7 +272,6 @@ def meal_detail(id):
     form = SearchForm()
 
     cur = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
-
     cur.execute('SELECT * FROM ingredients WHERE recipe_id = %s', (id,))     
     ingredient = cur.fetchall()
     cur.close()

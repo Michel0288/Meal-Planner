@@ -52,10 +52,54 @@
         <div class="Regular-row">
             <p class="DailyCalories">Expected Daily Calories: {{user.dailycalories}} Calories</p>
         </div>
- 
     </div>
-  
 </div>
-  
+<hr>
+
+
+<div class="RecipeCards2">
+    <h2>MEAL PLAN FOR WEEK {{p_meals.meal_week}}</h2>
+    {{p_meals}}
+    {%for p_meal in p_meals%}
+    <h2>MEAL PLAN FOR WEEK {{p_meal.meal_week}}</h2>
+    <div class="card"  id="cardid" style="padding:5px; margin-bottom:20px;">
+        <div class="RecipeImageDiv">
+            <img class="RecipeImage" src="/uploads/{{p_meal.photo}}" alt="Recipe Image">
+        </div>
+        <div class="RecipeInfoDiv">
+            <div>
+                <h4 class="card-title" id="recipename">{{p_meal.recipe_name}}</h4>
+            </div>
+            <div class="row" id="RowFlex" style="margin-left: 20px;">
+                <div class="">
+                    <h5 class= "" id="Recipemealtype">{{p_meal.meal_type}}</h5>
+                </div>
+                <div class="">
+                    <h5 class= "" id="Recipeservings">{{p_meal.servings}} servings</h5>
+                </div>           
+            </div>  
+            <div class="row">
+                <h5 class="card-preptime" id="Recipepreptime">Preparation Time: {{p_meal.preparation_time}}</h5>
+            </div>
+            <div class="row" style="padding-bottom: 5px;">
+                <h5 class="" id="Recipeingredients">Ingredients: {{p_meal.ingredient_name}} </h5>
+            </div>
+
+            <div class="row" style="padding-bottom: 5px;">
+                <h5 class="" id="Recipemeasurements">Measurements: {{p_meal.measurement}} </h5>
+            </div>
+
+            <div class="row">
+                <h5 class="card-procedure" id="Recipeprocedure">Step {{p_meal.step_no}}: {{p_meal.instruction}} </h5>
+            </div>
+
+            <div class="row" style="padding-bottom: 5px;">
+                <h5 class="" id="RecipeCalories">Total Calories: {{p_meal.calories_count}} </h5>
+            </div>
+        </div>
+    </div>    
+    {%endfor%}
+</div>
+
 
 {% endblock %}

@@ -30,6 +30,7 @@ CREATE TABLE recipe(
     meal_type VARCHAR(50),
     servings INT,
     photo VARCHAR(200),
+    totalcalories INT,
     dateadded DATE DEFAULT NOW(),
     PRIMARY KEY(recipe_id)
 );
@@ -66,11 +67,20 @@ CREATE TABLE kitchen_stock(
 DROP TABLE IF EXISTS meal_plan;
 CREATE TABLE meal_plan(
     mealplan_id INT NOT NULL unique AUTO_INCREMENT,
-    meal_week DATE DEFAULT NOW()
+    meal_week DATE,
     recipe_id INT NOT NULL,
-    foreign key(recipe_id) references recipe(recipe_id) ON DELETE CASCADE ON UPDATE CASCADE
+    account_id INT NOT NULL,
+    foreign key(recipe_id) references recipe(recipe_id) ON DELETE CASCADE ON UPDATE CASCADE,
+    foreign key(account_id) references account(account_id) 
 );
-
+/* 
+DROP TABLE IF EXISTS meal;
+CREATE TABLE meal(
+    meal_id INT NOT NULL unique AUTO_INCREMENT,
+    recipe_id INT NOT NULL,
+    totalcalories INT NOT NULL,
+    foreign key(recipe_id) references recipe(recipe_id)
+); */
 /*
 
     meal_id
