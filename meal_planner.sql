@@ -28,7 +28,7 @@ CREATE TABLE recipe(
     meal_type VARCHAR(50),
     servings INT,
     photo VARCHAR(200),
-    totalcalories INT,
+    totalcalories INT, 
     dateadded DATE DEFAULT NOW(),
     PRIMARY KEY(recipe_id)
 );
@@ -38,7 +38,7 @@ CREATE TABLE ingredients(
     ingredient_id INT NOT NULL unique AUTO_INCREMENT,
     ingredient_name VARCHAR(200),
     calories_count INT,
-    measurement VARCHAR(5000),
+    measurement VARCHAR(500),
     recipe_id INT NOT NULL,
     PRIMARY KEY(ingredient_id),
     foreign key(recipe_id) references recipe(recipe_id) 
@@ -82,6 +82,7 @@ BEGIN
 SELECT * FROM recipe WHERE recipe_name like %searchitem% OR totalcalories <= searchitem;
 END //
 DELIMITER ;
+
 
 /*
 PROCEDURE FOR SUPERMARKET LIST (DELETE THIS LINE AND UNCOMMENT PROCEDURE)

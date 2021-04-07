@@ -1,0 +1,12 @@
+INSERT INTO account VALUES(1,"Corey","Vazquez","Corey660","Vazquez660",35,"Male","2 ft 10 in",730,"chocolate","Pescatarian","Maintain Weight","db2.png");
+INSERT INTO account VALUES(2,"Anthony","Deleon","Anthony791","Deleon791",15,"Female","6 ft 2 in",445,"strawberries","Pescatarian","Maintain Weight","db2.png");
+INSERT INTO recipe(recipe_id,recipe_name,preparation_time,meal_type,servings,photo,dateadded) VALUES(1,"BBQ Pigtail",83,"Breakfast",6,"food3","2021-04-06");
+INSERT INTO instructions VALUES(3,1,"Let the cookies cool slightly on the baking sheets, then transfer onto a plate for serving.",1);
+INSERT INTO instructions VALUES(7,2,"Add 1/2 cup finely chopped nuts to the flour mixture if youd like a nutty flavor and crunch.",1);
+INSERT INTO ingredients VALUES(2,"Rice",5,"1 Cup",1);
+INSERT INTO ingredients VALUES(5,"Cheese",58,"1 Cup",1);
+INSERT INTO recipe(recipe_id,recipe_name,preparation_time,meal_type,servings,photo,dateadded) VALUES(2,"BBQ Ribs",63,"Breakfast",4,"food3","2021-04-06");
+INSERT INTO instructions VALUES(10,1,"Mix together the flour, salt and baking soda in a medium bowl. Add it into the creamed mixture in 2 to 3 batches, mixing until just combined. Mix in the oats until just combined.",2);
+INSERT INTO instructions VALUES(14,2,"In the bowl of an electric mixer (or using a hand mixer), beat together the brown sugar and butter until fluffy. Beat in the vanilla. Add the eggs one at a time, scraping the bowl after each one.",2);
+INSERT INTO ingredients VALUES(7,"Apple",126,"2 Cups",2);
+INSERT INTO ingredients VALUES(10,"Bacon",98,"1/2 Cup",2);
